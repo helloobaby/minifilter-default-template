@@ -2,7 +2,9 @@
 #include<ntifs.h>
 #include<ntddk.h>
 #include<wdm.h>
+
 #include<fltKernel.h>
+#include<string.h>
 
 namespace dbg {
     template<typename... types>
@@ -10,6 +12,12 @@ namespace dbg {
     {
         DbgPrintEx(DPFLTR_DEFAULT_ID, DPFLTR_ERROR_LEVEL, args...);
     }
+
+#define CALL_ONCE_START {\
+    static int i = 0;\
+    if(i==0){
+#define CALL_ONCE_END i++;\
+    }}
 }
 extern PFLT_FILTER gFilterHandle;
 
@@ -56,6 +64,22 @@ namespace minifilter {
                 _In_ FLT_POST_OPERATION_FLAGS Flags
             );
     }
+    namespace irp_read {
+
+        FLT_PREOP_CALLBACK_STATUS PreOperation(
+            _Inout_ PFLT_CALLBACK_DATA Data,
+            _In_ PCFLT_RELATED_OBJECTS FltObjects,
+            _Flt_CompletionContext_Outptr_ PVOID* CompletionContext
+        );
+        FLT_POSTOP_CALLBACK_STATUS
+            PostOperation(
+                _Inout_ PFLT_CALLBACK_DATA Data,
+                _In_ PCFLT_RELATED_OBJECTS FltObjects,
+                _In_opt_ PVOID CompletionContext,
+                _In_ FLT_POST_OPERATION_FLAGS Flags
+            );
+
+    }
 
     CONST FLT_OPERATION_REGISTRATION Callbacks[] = {
 
@@ -76,8 +100,8 @@ namespace minifilter {
 
     { IRP_MJ_READ,
       0,
-      NULL,
-      NULL },
+      irp_read::PreOperation,
+      irp_read::PostOperation },
 
     { IRP_MJ_WRITE,
       0,

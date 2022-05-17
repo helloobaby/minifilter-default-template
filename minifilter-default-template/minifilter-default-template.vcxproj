@@ -37,7 +37,8 @@
   <ItemGroup>
     <ClCompile Include="InstanceTeardownComplete.cpp" />
     <ClCompile Include="InstanceTeardownStart.cpp" />
-    <ClCompile Include="IRP_MJ_CREATE.cpp" />
+    <ClCompile Include="irp_mj_create.cpp" />
+    <ClCompile Include="irp_mj_read.cpp" />
     <ClCompile Include="MiniFilterUnload.cpp" />
     <ClCompile Include="InstanceQueryTeardown.cpp" />
     <ClCompile Include="InstanceSetup.cpp" />
@@ -160,6 +161,7 @@
     </ClCompile>
     <ClCompile>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <PreprocessorDefinitions>DBG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -198,6 +200,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="minifilter.h" />
+    <ClInclude Include="utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

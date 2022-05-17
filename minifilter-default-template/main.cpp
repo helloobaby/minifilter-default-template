@@ -3,6 +3,7 @@
 --*/
 
 #include"minifilter.h"
+
 PFLT_FILTER gFilterHandle;
 
 extern "C"
@@ -34,10 +35,14 @@ DriverEntry (
     }
     else 
     {
-        dbg::print("FltRegisterFilter failed with status %x\n");
+        dbg::print("FltRegisterFilter failed with status %x\n",status);
     }
 
+#ifdef DBG
+    
     dbg::print("minifilter loaded (complie at %s)\n", __TIMESTAMP__);
+#endif // DBG
+
     return status;
 }
 
