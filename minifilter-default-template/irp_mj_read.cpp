@@ -11,16 +11,23 @@ namespace minifilter
         )
         {
             WCHAR* FileName = utils::ExtractFileNameFromFltObjects(FltObjects);
+            CALL_ONCE_START;
+            dbg::print("Read File %ws\n", FileName);
+            dbg::print("[-]%ws\n",utils::GetFileFullPathName(Data));
+            CALL_ONCE_END;
             FileName = _wcslwr(FileName);
 
+
             if (wcsstr(FileName, L"sbb.txt")) {
-                dbg::print("123\n");
-                return FLT_PREOP_COMPLETE;
+                
+                dbg::print("FileObject : 0x%p\n",FltObjects->FileObject);
+
+                return FLT_PREOP_SUCCESS_WITH_CALLBACK;
             }
             return FLT_PREOP_SUCCESS_WITH_CALLBACK;
         }
         FLT_POSTOP_CALLBACK_STATUS
-            PostOperation(
+            PostOperation( 
                 _Inout_ PFLT_CALLBACK_DATA Data,
                 _In_ PCFLT_RELATED_OBJECTS FltObjects,
                 _In_opt_ PVOID CompletionContext,
