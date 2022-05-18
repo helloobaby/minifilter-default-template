@@ -12,9 +12,12 @@ namespace utils {
 
 	__inline
 	WCHAR* UnicodeString2WcharPointer(PUNICODE_STRING us) {
-		if (RtlValidateUnicodeString(0,us) == STATUS_INVALID_PARAMETER)
+		if (RtlValidateUnicodeString(0, us) == STATUS_INVALID_PARAMETER) {
+#ifdef DBG
+			dbg::print("RtlValidateUnicodeString failed\n");
+#endif
 			return nullptr;
-
+		}
 		WCHAR* buf = (WCHAR*)ExAllocatePoolWithTag(NonPagedPool, us->Length + 2, 'litu');
 		buf[us->Length / 2] = L'\0';
 		memcpy(buf, us->Buffer, us->Length);
@@ -66,7 +69,9 @@ namespace utils {
 	//http://fsfilters.blogspot.com/2011/04/names-in-minifilters-flags-of.html
 	//
 
-	__inline WCHAR* GetFileFullPathName(PFLT_CALLBACK_DATA Data){
+	__inline WCHAR* GetFileFullPathName(PFLT_CALLBACK_DATA Data, PCFLT_RELATED_OBJECTS FltObjects){
+		PAGED_CODE(); 
+
 		NTSTATUS status = STATUS_SUCCESS;
 		PFLT_FILE_NAME_INFORMATION NameInfo;
 		status = FltGetFileNameInformation(Data,
@@ -75,10 +80,53 @@ namespace utils {
 			&NameInfo);
 
 		if (!NT_SUCCESS(status)) {
-			dbg::print("[%s - %s]FltGetFileNameInformation failed with status %x\n",__FILE__,__LINE__, status);
+			UNICODE_STRING VolumeName{};
+			UNICODE_STRING usFileName;
+			WCHAR* wcFileName{};
+			DWORD Size; //VolumeName length
+			if (status == STATUS_FLT_INVALID_NAME_REQUEST) {
+				DbgBreakPoint();
+				status = FltGetVolumeName(FltObjects->Volume, &VolumeName, &Size);
+				if (status == STATUS_BUFFER_TOO_SMALL) {
+
+					wcFileName = ExtractFileNameFromFltObjects(FltObjects);
+
+					//
+					//给VolumeName字符串分配内存(因为后面要拼接,所以要多分配)
+					//+10是随便加的,只要确保缓冲区够就行
+					//
+
+					VolumeName.Buffer = (WCHAR*)ExAllocatePoolWithTag(NonPagedPool, Size+wcslen(wcFileName)*2+10,'litu');
+					VolumeName.MaximumLength = Size + wcslen(wcFileName)*2+10;
+					VolumeName.Length = VolumeName.MaximumLength - sizeof(UNICODE_NULL);
+
+					status = FltGetVolumeName(FltObjects->Volume, &VolumeName, NULL);
+
+					if (NT_SUCCESS(status)) {
+						if (wcFileName) {
+							RtlInitUnicodeString(&usFileName, wcFileName);
+							RtlAppendUnicodeStringToString(&VolumeName, &usFileName);
+
+							WCHAR* t = UnicodeString2WcharPointer(&VolumeName);
+							RtlFreeUnicodeString(&VolumeName);
+							ExFreePool(wcFileName);
+							return t;
+						}
+					}
+				}
+			}
+
+
+
+#if DBG
+			dbg::print("last status %x\n",status);
+#endif // DBG
 			return nullptr;
 		}
-		return UnicodeString2WcharPointer(&NameInfo->Name);
+
+		WCHAR* t = UnicodeString2WcharPointer(&NameInfo->Name);
+		FltReleaseFileNameInformation(NameInfo);
+		return t;
 	}
 
 

@@ -43,6 +43,9 @@
     <ClCompile Include="irp_mj_read.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="irp_mj_acquire_for_section_synchronization.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="minifilter.h">

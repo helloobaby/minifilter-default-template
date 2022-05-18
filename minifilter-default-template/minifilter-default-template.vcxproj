@@ -37,6 +37,7 @@
   <ItemGroup>
     <ClCompile Include="InstanceTeardownComplete.cpp" />
     <ClCompile Include="InstanceTeardownStart.cpp" />
+    <ClCompile Include="irp_mj_acquire_for_section_synchronization.cpp" />
     <ClCompile Include="irp_mj_create.cpp" />
     <ClCompile Include="irp_mj_read.cpp" />
     <ClCompile Include="MiniFilterUnload.cpp" />
