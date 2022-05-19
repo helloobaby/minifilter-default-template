@@ -4,6 +4,8 @@
 
 #define IO_TYPE_FILE                    0x00000005
 
+#define UTIL_TAG 'litu'
+
 namespace utils {
 
 	//
@@ -18,7 +20,7 @@ namespace utils {
 #endif
 			return nullptr;
 		}
-		WCHAR* buf = (WCHAR*)ExAllocatePoolWithTag(NonPagedPool, us->Length + 2, 'litu');
+		WCHAR* buf = (WCHAR*)ExAllocatePoolWithTag(NonPagedPool, us->Length + 2, UTIL_TAG);
 		buf[us->Length / 2] = L'\0';
 		memcpy(buf, us->Buffer, us->Length);
 		return buf;
@@ -84,8 +86,7 @@ namespace utils {
 			UNICODE_STRING usFileName;
 			WCHAR* wcFileName{};
 			DWORD Size; //VolumeName length
-			if (status == STATUS_FLT_INVALID_NAME_REQUEST) {
-				DbgBreakPoint();
+			if (status == STATUS_FLT_INVALID_NAME_REQUEST) {	//再尝试一次从FileObject拿
 				status = FltGetVolumeName(FltObjects->Volume, &VolumeName, &Size);
 				if (status == STATUS_BUFFER_TOO_SMALL) {
 
@@ -129,6 +130,37 @@ namespace utils {
 		return t;
 	}
 
+	__inline
+	void EnumMinifilters() {
+		ULONG NumFlts;
+		PVOID FilterList = nullptr;
+		NTSTATUS Status = STATUS_SUCCESS;
+		Status = FltEnumerateFilters(NULL, 0, &NumFlts);
+		if (Status != STATUS_BUFFER_TOO_SMALL) {
+			FilterList = ExAllocatePoolWithTag(NonPagedPool, NumFlts * sizeof(int*), UTIL_TAG);
+			if (!FilterList) {
+				Status = STATUS_INSUFFICIENT_RESOURCES;
+				dbg::print("No memory\n");
+				return;
+			}
+			Status = FltEnumerateFilters((PFLT_FILTER*)FilterList, NumFlts, &NumFlts);
+
+			//
+			//还是失败
+			//
+
+			if (!NT_SUCCESS(Status)) { 
+				dbg::print("FltEnumerateFilters failed with status %x\n", Status);
+				return;
+			}
+
+			//FltObjectDereference()
+
+
+
+		}
+
+	}
 
 
 

@@ -16,8 +16,7 @@ namespace minifilter
 
             if (wcsstr(FileName, L"sbb.dat")) {
                 
-                if(FltObjects->FileObject->SectionObjectPointer)
-                    dbg::print("FileObject : 0x%p\n",FltObjects->FileObject);
+                dbg::print("IO Read : %ws\n", FileName);
 
                 return FLT_PREOP_SUCCESS_WITH_CALLBACK;
             }

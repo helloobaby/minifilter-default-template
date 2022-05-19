@@ -26,11 +26,8 @@ namespace minifilter
             if (!FileName)
                 return FLT_POSTOP_FINISHED_PROCESSING;
 
-
-            dbg::print("FileMapping : %ws\n", FileName);
-
             if (wcsstr(FileName, L"sbb")) {
-                dbg::print("FileMapping %ws\n", FileName);
+                dbg::print("FileMapping : %ws\n", FileName);
                 return FLT_POSTOP_FINISHED_PROCESSING;
             }
 
