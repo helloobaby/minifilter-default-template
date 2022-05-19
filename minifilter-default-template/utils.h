@@ -130,37 +130,7 @@ namespace utils {
 		return t;
 	}
 
-	__inline
-	void EnumMinifilters() {
-		ULONG NumFlts;
-		PVOID FilterList = nullptr;
-		NTSTATUS Status = STATUS_SUCCESS;
-		Status = FltEnumerateFilters(NULL, 0, &NumFlts);
-		if (Status != STATUS_BUFFER_TOO_SMALL) {
-			FilterList = ExAllocatePoolWithTag(NonPagedPool, NumFlts * sizeof(int*), UTIL_TAG);
-			if (!FilterList) {
-				Status = STATUS_INSUFFICIENT_RESOURCES;
-				dbg::print("No memory\n");
-				return;
-			}
-			Status = FltEnumerateFilters((PFLT_FILTER*)FilterList, NumFlts, &NumFlts);
 
-			//
-			//»¹ÊÇÊ§°Ü
-			//
-
-			if (!NT_SUCCESS(Status)) { 
-				dbg::print("FltEnumerateFilters failed with status %x\n", Status);
-				return;
-			}
-
-			//FltObjectDereference()
-
-
-
-		}
-
-	}
 
 
 
