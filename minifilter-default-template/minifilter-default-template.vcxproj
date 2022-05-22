@@ -35,6 +35,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CtxContextCleanup.cpp" />
     <ClCompile Include="InstanceTeardownComplete.cpp" />
     <ClCompile Include="InstanceTeardownStart.cpp" />
     <ClCompile Include="irp_mj_acquire_for_section_synchronization.cpp" />
@@ -200,6 +201,7 @@
     <FilesToPackage Include="$(TargetPath)" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ctx.h" />
     <ClInclude Include="minifilter.h" />
     <ClInclude Include="utils.h" />
   </ItemGroup>

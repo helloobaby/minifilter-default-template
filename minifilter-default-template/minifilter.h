@@ -6,6 +6,9 @@
 #include<fltKernel.h>
 #include<string.h>
 
+#define MINI_INCLUDE
+#include "ctx.h"
+
 namespace dbg {
     template<typename... types>
     void print(types... args)
@@ -57,6 +60,10 @@ namespace minifilter {
             _In_ FLT_INSTANCE_TEARDOWN_FLAGS Flags
         );
 
+    VOID CtxContextCleanup(
+            _In_ PFLT_CONTEXT Context,
+            _In_ FLT_CONTEXT_TYPE ContextType
+        );
 
     namespace irp_create
     {
@@ -307,15 +314,44 @@ namespace minifilter {
     { IRP_MJ_OPERATION_END }
     };
 
+    const FLT_CONTEXT_REGISTRATION ContextRegistration[] = {
+
+      { FLT_INSTANCE_CONTEXT,
+      0,
+      CtxContextCleanup,
+      CTX_INSTANCE_CONTEXT_SIZE,
+      CTX_INSTANCE_CONTEXT_TAG },
+
+    { FLT_FILE_CONTEXT,
+      0,
+      CtxContextCleanup,
+      CTX_FILE_CONTEXT_SIZE,
+      CTX_FILE_CONTEXT_TAG },
+
+    { FLT_STREAM_CONTEXT,
+      0,
+      CtxContextCleanup,
+      CTX_STREAM_CONTEXT_SIZE,
+      CTX_STREAM_CONTEXT_TAG },
+
+    { FLT_STREAMHANDLE_CONTEXT,
+      0,
+      CtxContextCleanup,
+      CTX_STREAMHANDLE_CONTEXT_SIZE,
+      CTX_STREAMHANDLE_CONTEXT_TAG },
+
+    { FLT_CONTEXT_END }
+    };
+
 
     CONST FLT_REGISTRATION FilterRegistration = {
 
         sizeof(FLT_REGISTRATION),         //  Size
-        FLT_REGISTRATION_VERSION,           //  Version
-        0,                                  //  Flags
+        FLT_REGISTRATION_VERSION,         //  Version
+        0,                                //  Flags
 
-        NULL,                               //  Context
-        Callbacks,                          //  Operation callbacks
+        ContextRegistration,              //  Context
+        Callbacks,                        //  Operation callbacks
 
         Unload,                           //  MiniFilterUnload
 
@@ -324,9 +360,9 @@ namespace minifilter {
         InstanceTeardownStart,            //  InstanceTeardownStart
         InstanceTeardownComplete,         //  InstanceTeardownComplete
 
-        NULL,                               //  GenerateFileName
-        NULL,                               //  GenerateDestinationFileName
-        NULL                                //  NormalizeNameComponent
+        NULL,                             //  GenerateFileName
+        NULL,                             //  GenerateDestinationFileName
+        NULL                              //  NormalizeNameComponent
 
     };
 }

@@ -46,12 +46,18 @@
     <ClCompile Include="irp_mj_acquire_for_section_synchronization.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CtxContextCleanup.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="minifilter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="utils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ctx.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
