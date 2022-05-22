@@ -10,7 +10,13 @@ namespace minifilter
             _Flt_CompletionContext_Outptr_ PVOID* CompletionContext
         )
         {
+            WCHAR* FileName = utils::GetFileFullPathName(Data, FltObjects);
+            if (!FileName)
+                return FLT_PREOP_SUCCESS_WITH_CALLBACK;;
 
+            if (wcsstr(FileName, L"sbb")) {
+                return FLT_PREOP_COMPLETE;
+            }
 
             return FLT_PREOP_SUCCESS_WITH_CALLBACK;
         }

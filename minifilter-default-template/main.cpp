@@ -15,8 +15,6 @@ DriverEntry (
 {
     NTSTATUS status;
 
-    FltEnumerateFilters
-
     status = FltRegisterFilter( DriverObject,
                                 &minifilter::FilterRegistration,
                                 &gFilterHandle );

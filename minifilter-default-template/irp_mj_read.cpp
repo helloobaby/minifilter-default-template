@@ -10,16 +10,12 @@ namespace minifilter
             _Flt_CompletionContext_Outptr_ PVOID* CompletionContext
         )
         {
-            WCHAR* FileName = utils::GetFileFullPathName(Data,FltObjects);
-            if (!FileName)
-                return FLT_PREOP_SUCCESS_WITH_CALLBACK;
+            if(FLT_IS_FASTIO_OPERATION(Data))
+                return FLT_PREOP_DISALLOW_FASTIO;
 
-            if (wcsstr(FileName, L"sbb.dat")) {
-                
-                dbg::print("IO Read : %ws\n", FileName);
-
+            if (FlagOn(Data->Iopb->IrpFlags, IRP_PAGING_IO))
                 return FLT_PREOP_SUCCESS_WITH_CALLBACK;
-            }
+            
             return FLT_PREOP_SUCCESS_WITH_CALLBACK;
         }
         FLT_POSTOP_CALLBACK_STATUS

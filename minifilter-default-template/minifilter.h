@@ -13,6 +13,15 @@ namespace dbg {
         DbgPrintEx(DPFLTR_DEFAULT_ID, DPFLTR_ERROR_LEVEL, args...);
     }
 
+    __inline void dbgbreak() {
+#ifdef DBG
+        DbgBreakPoint();
+#else
+        print("breakpoint trigger\n");
+#endif
+
+    }
+
 #define CALL_ONCE_START {\
     static int i = 0;\
     if(i==0){
