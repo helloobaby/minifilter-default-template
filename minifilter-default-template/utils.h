@@ -11,6 +11,7 @@ namespace utils {
 	//
 	// 将UNICODE_STRING转化为空字符结尾的宽字符串
 	// 需要调用者释放内存
+	//
 
 	__inline
 	WCHAR* UnicodeString2WcharPointer(PUNICODE_STRING us) {

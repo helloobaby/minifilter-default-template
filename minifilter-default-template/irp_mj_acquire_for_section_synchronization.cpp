@@ -10,14 +10,6 @@ namespace minifilter
             _Flt_CompletionContext_Outptr_ PVOID* CompletionContext
         )
         {
-            WCHAR* FileName = utils::GetFileFullPathName(Data, FltObjects);
-            if (!FileName)
-                return FLT_PREOP_SUCCESS_WITH_CALLBACK;;
-
-            if (wcsstr(FileName, L"sbb")) {
-                return FLT_PREOP_COMPLETE;
-            }
-
             return FLT_PREOP_SUCCESS_WITH_CALLBACK;
         }
         FLT_POSTOP_CALLBACK_STATUS
@@ -28,15 +20,6 @@ namespace minifilter
                 _In_ FLT_POST_OPERATION_FLAGS Flags
             )
         {
-            WCHAR* FileName = utils::GetFileFullPathName(Data,FltObjects);
-            if (!FileName)
-                return FLT_POSTOP_FINISHED_PROCESSING;
-
-            if (wcsstr(FileName, L"sbb")) {
-                dbg::print("FileMapping : %ws\n", FileName);
-                return FLT_POSTOP_FINISHED_PROCESSING;
-            }
-
             return FLT_POSTOP_FINISHED_PROCESSING;
         }
 
