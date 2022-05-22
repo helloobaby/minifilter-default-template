@@ -41,6 +41,7 @@
     <ClCompile Include="irp_mj_acquire_for_section_synchronization.cpp" />
     <ClCompile Include="irp_mj_create.cpp" />
     <ClCompile Include="irp_mj_read.cpp" />
+    <ClCompile Include="irp_mj_write.cpp" />
     <ClCompile Include="MiniFilterUnload.cpp" />
     <ClCompile Include="InstanceQueryTeardown.cpp" />
     <ClCompile Include="InstanceSetup.cpp" />

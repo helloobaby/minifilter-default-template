@@ -97,6 +97,23 @@ namespace minifilter {
 
     }
 
+    namespace irp_write {
+
+        FLT_PREOP_CALLBACK_STATUS PreOperation(
+            _Inout_ PFLT_CALLBACK_DATA Data,
+            _In_ PCFLT_RELATED_OBJECTS FltObjects,
+            _Flt_CompletionContext_Outptr_ PVOID* CompletionContext
+        );
+        FLT_POSTOP_CALLBACK_STATUS
+            PostOperation(
+                _Inout_ PFLT_CALLBACK_DATA Data,
+                _In_ PCFLT_RELATED_OBJECTS FltObjects,
+                _In_opt_ PVOID CompletionContext,
+                _In_ FLT_POST_OPERATION_FLAGS Flags
+            );
+
+    }
+
     namespace irp_mj_acquire_for_section_synchronization {
 
         FLT_PREOP_CALLBACK_STATUS PreOperation(
@@ -138,8 +155,8 @@ namespace minifilter {
 
     { IRP_MJ_WRITE,
       0,
-      NULL,
-      NULL },
+      irp_write::PreOperation,
+      irp_write::PostOperation },
 
     { IRP_MJ_QUERY_INFORMATION,
       0,

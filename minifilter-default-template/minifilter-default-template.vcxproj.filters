@@ -49,6 +49,9 @@
     <ClCompile Include="CtxContextCleanup.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="irp_mj_write.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="minifilter.h">
