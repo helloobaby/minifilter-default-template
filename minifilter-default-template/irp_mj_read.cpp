@@ -10,11 +10,11 @@ namespace minifilter
             _Flt_CompletionContext_Outptr_ PVOID* CompletionContext
         )
         {
-            if(FLT_IS_FASTIO_OPERATION(Data))
-                return FLT_PREOP_DISALLOW_FASTIO;
-
             if (FlagOn(Data->Iopb->IrpFlags, IRP_PAGING_IO))
                 return FLT_PREOP_SUCCESS_WITH_CALLBACK;
+
+            if(FLT_IS_FASTIO_OPERATION(Data))
+                return FLT_PREOP_DISALLOW_FASTIO;
             
             return FLT_PREOP_SUCCESS_WITH_CALLBACK;
         }
