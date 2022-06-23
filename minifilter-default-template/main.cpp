@@ -36,6 +36,7 @@ DriverEntry (
     else 
     {
         dbg::print("FltRegisterFilter failed with status %x\n",status);
+        return status;
     }
 
 #ifdef DBG
